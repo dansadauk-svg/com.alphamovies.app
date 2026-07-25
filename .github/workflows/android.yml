@@ -1,23 +1,29 @@
 name: Build Alpha Movies APK
 
 on:
- push:
-  branches: [ main ]
- workflow_dispatch:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
- build:
-  runs-on: ubuntu-latest
-  steps:
-  - uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
 
-  - uses: gradle/actions/setup-gradle@v4
+    steps:
+      - uses: actions/checkout@v4
 
-  - name: Build APK
-    run: ./gradlew assembleRelease
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-  - name: Upload APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: AlphaMovies-APK
-      path: app/build/outputs/apk/release/*.apk
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK
+        run: gradle assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AlphaMovies-APK
+          path: app/build/outputs/apk/release/*.apk
