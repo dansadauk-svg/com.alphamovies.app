@@ -20,7 +20,7 @@ app/src/main/java/com/alphamovies/app/AppConfig.java
 Confirm the live website URL:
 
 ```java
-public static final String WEBSITE_URL = "https://alphamovies.app/";
+public static final String WEBSITE_URL = "https://alphamovies.com.ng/";
 ```
 
 If your final domain is different, change only that value and keep the trailing slash.
