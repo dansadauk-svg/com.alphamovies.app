@@ -1,22 +1,28 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id 'com.android.application'
 }
 
 android {
-    namespace = "com.alphamovies.app"
-    compileSdk = 35
+    namespace 'com.alphamovies.app'
+    compileSdk 35
 
     defaultConfig {
-        applicationId = "com.alphamovies.app"
-        minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        applicationId 'com.alphamovies.app'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
     }
-}
 
-dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    buildTypes {
+        debug {
+            applicationIdSuffix ''
+            versionNameSuffix '-debug'
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
 }

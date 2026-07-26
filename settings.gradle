@@ -5,14 +5,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "AlphaMoviesAPK"
-include(":app")
+dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+rootProject.name = 'AlphaMoviesWebView'
+include ':app'

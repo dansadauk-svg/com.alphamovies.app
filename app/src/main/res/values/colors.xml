@@ -1,0 +1,8 @@
+<resources>
+    <color name="alpha_black">#050505</color>
+    <color name="alpha_panel">#111111</color>
+    <color name="alpha_red">#E50914</color>
+    <color name="alpha_white">#FFFFFF</color>
+    <color name="alpha_muted">#B8B8B8</color>
+    <color name="ic_launcher_background">#050505</color>
+</resources>
