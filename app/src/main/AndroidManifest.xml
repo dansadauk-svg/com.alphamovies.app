@@ -17,6 +17,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:enableOnBackInvokedCallback="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
