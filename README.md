@@ -30,7 +30,11 @@ If your final domain is different, change only that value and keep the trailing 
 - WebView that keeps the website looking the same as Chrome mobile
 - JavaScript, cookies, DOM storage, and login session persistence
 - File upload support from the WebView
+- Native movie downloads through Android DownloadManager
+- Download links keep the app session cookies and start immediately from the in-app Download Movie button
 - Fullscreen video support
+- Firebase Cloud Messaging setup with `app/google-services.json`
+- Pull-to-refresh gesture with a visible refresh spinner
 - Safe header handling so the website does not sit under the camera cutout/notch
 - Dark Alpha Movies splash screen
 - Transparent PNG splash logo

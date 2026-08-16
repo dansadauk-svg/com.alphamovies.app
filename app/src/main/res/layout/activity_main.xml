@@ -12,6 +12,35 @@
         android:layout_height="match_parent"
         android:background="@color/alpha_black" />
 
+    <LinearLayout
+        android:id="@+id/refreshIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/refresh_indicator_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/alpha_red" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Refreshing..."
+            android:textColor="@color/alpha_white"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/customViewContainer"
         android:layout_width="match_parent"
