@@ -6,6 +6,7 @@ This is the Android WebView project for Alpha Movies.
 
 - App name: Alpha Movies
 - Package/Application ID: `com.alphamovies.app`
+- Version: `1.0.5` / `versionCode 6`
 - Main activity: `com.alphamovies.app.MainActivity`
 - Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 
