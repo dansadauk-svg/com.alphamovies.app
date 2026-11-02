@@ -1,5 +1,11 @@
 # Alpha Movies Android WebView App
 
+## Alpha Movies Android v1.0.11
+
+- Raises the minimum supported Android SDK from 23 to 24.
+- Meets Google Play automatic protection's minimum SDK requirement.
+- Uses `versionCode 12` for the next Play Store bundle.
+
 ## Alpha Movies Android v1.0.10
 
 - Adds AndroidX `SwipeRefreshLayout` to the app compile classpath.
@@ -26,7 +32,7 @@ This is the Android WebView project for Alpha Movies.
 
 - App name: Alpha Movies
 - Package/Application ID: `com.alphamovies.app`
-- Version: `1.0.10` / `versionCode 11`
+- Version: `1.0.11` / `versionCode 12`
 - Main activity: `com.alphamovies.app.MainActivity`
 - Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 
