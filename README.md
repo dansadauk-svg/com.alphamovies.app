@@ -1,5 +1,11 @@
 # Alpha Movies Android WebView App
 
+## Alpha Movies Android v1.0.9
+
+- Defines the missing `@color/backgroundColor` resource required by merged Android 12+ (`values-v31`) splash resources.
+- Provides the same dark splash background for default and night configurations.
+- Fixes the `:app:processDebugResources` Android resource-linking failure.
+
 ## Alpha Movies Android v1.0.8
 
 - Download notifications now show only the clean movie title.
@@ -12,7 +18,7 @@ This is the Android WebView project for Alpha Movies.
 
 - App name: Alpha Movies
 - Package/Application ID: `com.alphamovies.app`
-- Version: `1.0.8` / `versionCode 9`
+- Version: `1.0.9` / `versionCode 10`
 - Main activity: `com.alphamovies.app.MainActivity`
 - Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 

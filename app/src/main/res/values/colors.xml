@@ -5,4 +5,6 @@
     <color name="alpha_white">#FFFFFF</color>
     <color name="alpha_muted">#B8B8B8</color>
     <color name="ic_launcher_background">#050505</color>
+    <!-- Required by the merged Android 12+ splash resources. -->
+    <color name="backgroundColor">#050505</color>
 </resources>
