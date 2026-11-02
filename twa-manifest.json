@@ -1,0 +1,41 @@
+{
+  "packageId": "ng.com.mkmovies.app",
+  "host": "mkmovies.com.ng",
+  "name": "MK Movies",
+  "launcherName": "MK Movies",
+  "display": "standalone",
+  "themeColor": "#ffffff",
+  "themeColorDark": "#ffffff",
+  "navigationColor": "#ffffff",
+  "navigationColorDark": "#111827",
+  "navigationDividerColor": "#ffffff",
+  "navigationDividerColorDark": "#111827",
+  "backgroundColor": "#ffffff",
+  "enableNotifications": true,
+  "startUrl": "/?source=twa",
+  "iconUrl": "https://mkmovies.com.ng/wp-content/plugins/mk-movies-pwa/assets/icon-512.png",
+  "maskableIconUrl": "https://mkmovies.com.ng/wp-content/plugins/mk-movies-pwa/assets/icon-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "mk-movies-release-key.jks",
+    "alias": "mk_movies"
+  },
+  "appVersionName": "2.9.1",
+  "appVersionCode": 20,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://mkmovies.com.ng/mk-pwa-manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "orientation": "portrait-primary"
+}

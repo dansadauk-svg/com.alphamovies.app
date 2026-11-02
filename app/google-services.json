@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "302542894358",
-    "project_id": "alphamovies-6d3ff",
-    "storage_bucket": "alphamovies-6d3ff.firebasestorage.app"
+    "project_number": "417821510571",
+    "project_id": "mk-movies-44ea0",
+    "storage_bucket": "mk-movies-44ea0.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:302542894358:android:0b165d4c1e5805a1a44c37",
+        "mobilesdk_app_id": "1:417821510571:android:b54a6500dcaf81a039e0ee",
         "android_client_info": {
-          "package_name": "com.alphamovies.app"
+          "package_name": "ng.com.mkmovies.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD6fOoCO9MV_FhGDUBnX5eG5SiXphKnM4I"
+          "current_key": "AIzaSyCD0fjatSa3az9zKKWkGs5c93AWqhh4OfI"
         }
       ],
       "services": {

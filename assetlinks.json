@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ng.com.mkmovies.app",
+      "sha256_cert_fingerprints": [
+        "D0:59:BA:06:7D:B3:67:EA:FB:4B:84:36:E1:5C:15:F9:F6:7D:98:DD:9E:D7:9E:90:8C:41:77:BF:32:A7:1B:0C"
+      ]
+    }
+  }
+]

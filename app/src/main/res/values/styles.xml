@@ -1,11 +1,14 @@
 <resources>
-    <style name="Theme.AlphaMovies" parent="android:style/Theme.Material.NoActionBar">
-        <item name="android:fontFamily">sans</item>
-        <item name="android:windowBackground">@color/alpha_black</item>
-        <item name="android:colorAccent">@color/alpha_red</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
+    <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#FF6B00</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>

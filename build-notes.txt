@@ -1,0 +1,11 @@
+Package name: ng.com.mkmovies.app
+Website: https://mkmovies.com.ng
+Version: 2.10.2 (code 23)
+Android SDK: compileSdk 36 / targetSdk 36
+Notifications: enabled
+Firebase notification channel: mk_movies_alerts_v3 (audible/high importance)
+Download progress channel: mk_movie_downloads_progress_v5 (audible/high importance; Pause/Resume/Cancel)
+Download result channel: mk_movie_downloads_complete_v5 (audible/high importance)
+Play upload SHA1: 59:0D:C2:C2:11:7A:04:5B:8A:03:44:24:2D:A4:C4:32:43:3F:A3:05
+Normal app orientation: portrait
+Offline/Pull refresh: provided by PWA plugin v1.5

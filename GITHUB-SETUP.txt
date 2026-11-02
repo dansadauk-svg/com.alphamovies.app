@@ -1,0 +1,17 @@
+MK Movies v2.10.2 Audible Downloads GitHub Setup
+================================
+
+1. Create a GitHub repository and upload the CONTENTS of this ZIP to the repository root.
+2. Do not upload the private signing-backup ZIP or any .jks file to the repository.
+3. When updating the same repository, keep the existing Actions secrets; do not add them again.
+4. The MK Movies repository needs these three secrets:
+   - MK_KEYSTORE_BASE64
+   - MK_KEYSTORE_PASSWORD
+   - MK_KEY_PASSWORD
+   The key alias is fixed as mk_movies in the workflow; MK_KEY_ALIAS is not required.
+5. Open Actions > Build MK Movies v2.10.2 Audible Downloads APK/AAB > Run workflow.
+6. Download mk-movies-release-apk for direct installation.
+7. Download mk-movies-release-aab for Google Play Console.
+
+The workflow will reject any signing key that does not match Google Play's expected SHA-1.
+The AAB output is named MK-Movies-v2.10.2-play-console.aab.
