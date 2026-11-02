@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'ng.com.mkmovies.app'
+    namespace 'com.alphamovies.app'
     compileSdk 36
 
     buildFeatures {
@@ -12,11 +12,11 @@ android {
     }
 
     defaultConfig {
-        applicationId 'ng.com.mkmovies.app'
-        minSdk 24
+        applicationId 'com.alphamovies.app'
+        minSdk 23
         targetSdk 36
-        versionCode 24
-        versionName '2.10.3'
+        versionCode 9
+        versionName '1.0.8'
     }
 
     compileOptions {
@@ -26,24 +26,34 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../mk-movies-release-key.jks')
-            storePassword System.getenv('MK_KEYSTORE_PASSWORD')
-            keyAlias 'mk_movies'
-            keyPassword System.getenv('MK_KEY_PASSWORD')
+            def releaseStoreFile = System.getenv("RELEASE_STORE_FILE")
+            def releaseStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
+            def releaseKeyAlias = System.getenv("RELEASE_KEY_ALIAS")
+            def releaseKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+
+            if (releaseStoreFile != null && releaseStorePassword != null && releaseKeyAlias != null && releaseKeyPassword != null) {
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
         }
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ''
+            versionNameSuffix '-debug'
+        }
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:35.1.0')
-    implementation 'com.google.firebase:firebase-messaging'
-    implementation 'androidx.core:core:1.17.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.firebase:firebase-messaging:24.0.0'
 }

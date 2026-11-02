@@ -1,139 +1,102 @@
-# MK Movies Android GitHub Build Pack v2.10.3
+# Alpha Movies Android WebView App
 
-## Version 2.10.3
+## Alpha Movies Android v1.0.8
 
-- Download notifications now display only the clean movie title.
-- Numeric storage IDs, random object keys, trailing IDs and the video extension are hidden from the notification title.
-- Audible progress, completion alerts, Pause, Resume and Cancel remain enabled.
+- Download notifications now show only the clean movie title.
+- R2 numeric prefixes, timestamps, random object keys, trailing IDs and video extensions are hidden from notification titles.
+- Pause, Resume, Cancel, progress, audible start and completion notifications remain enabled.
 
-This pack builds the MK Movies Android app from GitHub Actions. It uses a Trusted Web Activity so the app opens `https://mkmovies.com.ng` without the normal browser address bar after Digital Asset Links verification.
+This is the Android WebView project for Alpha Movies.
 
-## Before building
+## App details
 
-Install these WordPress plugins first:
+- App name: Alpha Movies
+- Package/Application ID: `com.alphamovies.app`
+- Version: `1.0.8` / `versionCode 9`
+- Main activity: `com.alphamovies.app.MainActivity`
+- Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 
-1. `mk-movies-pwa-plugin-v1.5-offline-refresh-push-ready.zip`
-2. `ksd-movie-push-notifications-v3.9.2-firebase-android-fix.zip`
-3. Existing `mk-movies-twa-verification-plugin-v1.0.zip`
+## Important before building
 
-Then confirm this URL opens JSON:
-
-```text
-https://mkmovies.com.ng/.well-known/assetlinks.json
-```
-
-## GitHub setup
-
-1. Create a GitHub repository. A private repository is recommended.
-2. Upload all files from this build pack into the repository.
-3. Go to **Settings > Secrets and variables > Actions > New repository secret**.
-4. If you are using the same repository, keep the three existing repository secrets. Add them only when setting up a new repository:
+Open this file:
 
 ```text
-MK_KEYSTORE_BASE64
-MK_KEYSTORE_PASSWORD
-MK_KEY_PASSWORD
+app/src/main/java/com/alphamovies/app/AppConfig.java
 ```
 
-The key alias is built into the MK workflow as `mk_movies`, so no alias secret is required. Never upload the `.jks` file or its password file into the GitHub repository. Generate `MK_KEYSTORE_BASE64` from the original MK Movies upload keystore with Windows PowerShell only when creating a new repository:
+Confirm the live website URL:
 
-```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("mk-movies-release-key.jks")) | Set-Clipboard
+```java
+public static final String WEBSITE_URL = "https://alphamovies.com.ng/";
 ```
 
-Paste the copied value into the `MK_KEYSTORE_BASE64` GitHub secret. The workflow verifies that its SHA-1 is `59:0D:C2:C2:11:7A:04:5B:8A:03:44:24:2D:A4:C4:32:43:3F:A3:05` before compiling.
+If your final domain is different, change only that value and keep the trailing slash.
 
-## Build
+## What is included
 
-1. Open the GitHub repository.
-2. Go to **Actions**.
-3. Select **Build MK Movies v2.10.2 Audible Downloads APK/AAB**.
-4. Click **Run workflow**.
-5. Download the generated APK/AAB from the workflow artifacts.
+- WebView that keeps the website looking the same as Chrome mobile
+- JavaScript, cookies, DOM storage, and login session persistence
+- File upload support from the WebView
+- Native movie downloads through Android DownloadManager
+- Download links keep the app session cookies and start immediately from the in-app Download Movie button
+- Fullscreen video support
+- Firebase Cloud Messaging setup with `app/google-services.json`
+- Pull-to-refresh gesture with a visible spinner only
+- Safe header handling so the website does not sit under the camera cutout/notch
+- Dark Alpha Movies splash screen
+- Splash screen uses the same Alpha Movies app icon
+- Splash loading percentage progress
+- Offline screen with retry button
+- Android launcher icons
+- GitHub Actions build workflow
 
-The output files are named `MK-Movies-v2.10.2-release.apk` and `MK-Movies-v2.10.2-play-console.aab`. Upload only the Play Console AAB to Google Play.
+## Build from GitHub
 
-## Included app features
+Push this project to GitHub. Then go to:
 
-- Full-screen MK Movies WebView app
-- Native Firebase Cloud Messaging alerts
-- Native movie downloads with a visible Android progress notification
-- Movie files use the movie title instead of a generic filename
-- Downloads run in a native foreground service with Pause, Resume and Cancel controls
-- Android back button works as normal browser history
-- White splash background
-- App stays portrait for normal pages
-- Offline pages and pull-to-refresh are handled by the WordPress PWA plugin
-- Videos are not cached inside the app
+```text
+Actions > Build Alpha Movies APK > Run workflow
+```
 
-## Important
+After the build finishes, download the APK from the workflow artifact named:
 
-Users must allow Android notification permission when prompted. The app registers its token with WordPress and also subscribes to the Firebase topic `mk_movies_all`.
+```text
+alpha-movies-debug-apk
+```
 
-The supported WordPress sender is KSD Movie Push Notifications v3.9.2. It sends to all active saved Android tokens in batches of 1,000 with Firebase priority set to `HIGH` and channel `mk_movies_alerts_v3`.
+## Replace app icon later
 
+The splash screen uses the same launcher icon as the app.
 
-## v1.7 dependency fix
-This pack uses androidbrowserhelper 2.5.0 to avoid AndroidX browser/core versions that require compileSdk 36.
+To replace it with your final production icon, update the launcher icon files:
 
+```text
+app/src/main/res/drawable/ic_launcher_foreground.png
+app/src/main/res/mipmap-mdpi/ic_launcher.png
+app/src/main/res/mipmap-hdpi/ic_launcher.png
+app/src/main/res/mipmap-xhdpi/ic_launcher.png
+app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+```
 
-## v2.6.2 Force Download Fix
-Movie download button clicks now start Android DownloadManager instead of opening the movie in a video player. Target API remains 36.
+Then rebuild the APK.
+# Alpha Movies Android v1.0.7
 
-## v2.7.0 Download Notifications, Filenames and Broadcast Push
+## GitHub Actions Android SDK fix
 
-- Shows native Android movie-download progress immediately after a user taps Download.
-- Preserves the movie title in the saved filename and completion notification.
-- Passes login cookies, the WebView user agent and page referrer to DownloadManager.
-- Uses Firebase topic `mk_movies_all` and a new high-priority Android alert channel.
-- Targets and compiles against Android 16 / API 36 for current Google Play submission requirements.
-- Uses minimum Android 7.0 / API 24, required by the current Firebase Messaging SDK.
-- Updates Android Gradle Plugin to 9.4.1, Gradle to 9.6.0, Google Services to 4.5.0 and Firebase BoM to 35.1.0.
-- Uses alerting notification channels with the default sound and vibration; repeated download progress updates alert only once.
-- Bumps the app to versionName 2.7.0 and versionCode 17.
+- Updated `android-actions/setup-android` from v3 to v4.
+- Explicitly installs `platform-tools` instead of the removed legacy `tools` package.
+- Installs `platforms;android-36` and `build-tools;36.0.0` with `sdkmanager --install`.
+- Applies the same Android 36 setup to debug APK and signed Play Store builds.
+- Pins Gradle 8.10.2 and disables the Gradle daemon in both workflows for consistent CI builds.
 
-## v2.8.0 GitHub and Play Signing Update
+## Proper Android movie downloads
 
-- Bumps the app to versionName 2.8.0 and versionCode 18.
-- Produces clearly named APK and Play Console AAB artifacts.
-- Requires the signing keystore through GitHub Actions secrets instead of committing it to the repository.
-- Verifies the upload-key SHA-1 before building and verifies the completed AAB certificate afterward.
-- Preserves the v2.7.0 native download notifications, movie-title filenames, high-priority FCM topic alerts, API 36 target, and alerting notification channels.
+- Uses a foreground Android download service instead of a silent browser-style transfer.
+- Shows the movie title, progress and downloaded size in the notification.
+- Includes Pause/Resume and Cancel actions in the notification bar.
+- Uses HTTP Range requests to continue a paused transfer without starting again when the server supports resume.
+- Saves completed movies under Downloads/Alpha Movies.
+- Uses an audible, vibrating Android notification channel for download start and completion.
+- Passes the movie page title into Android so downloaded files keep a readable movie name.
 
-## v2.9.0 API 36 Release
-
-- Keeps both `compileSdk` and `targetSdk` on Android API 36.
-- Bumps the Play Store release to versionName 2.9.0 and versionCode 19.
-- Installs Android platform 36 and build-tools 36.0.0 in GitHub Actions.
-- Adds a build-time validation step that stops the workflow if the SDK or version values are incorrect.
-- Produces `MK-Movies-v2.9.0-release.apk` and `MK-Movies-v2.9.0-play-console.aab`.
-
-## v2.9.1 Firebase Android Fix
-
-- Uses the fresh audible `mk_movies_alerts_v3` Android notification channel.
-- Posts the notification immediately and loads the optional poster afterward, preventing a slow image request from losing the alert.
-- Explicitly enables Firebase Messaging auto-initialization.
-- Refreshes the Firebase topic and WordPress token registration whenever the app resumes.
-- Sends the real Android notification-permission state to WordPress and re-registers when that state changes.
-- Supports the older `OPEN_MOVIE` click action while the updated sender uses normal launcher routing.
-
-## v2.10.2 Audible Android Download Notifications
-
-- Uses a new high-importance `mk_movie_downloads_progress_v5` channel so Android treats download progress as an alerting notification, not a silent one.
-- Plays the normal Android notification sound and vibrates when a movie download starts.
-- Uses a separate `mk_movie_downloads_complete_v5` channel so completion and failure alerts sound and vibrate reliably.
-- Progress refreshes use `setOnlyAlertOnce(true)`, preventing repeated sounds while the progress bar updates.
-- Keeps the real movie title, Pause, Resume and Cancel controls from v2.10.1.
-- Targets Android 16 / API 36 and releases as versionName 2.10.2, versionCode 23.
-
-## v2.10.1 Named Resumable Download Fix
-
-- Resolves the movie title directly from the current movie page, Open Graph title, movie card and download-button metadata.
-- Rejects timestamp, random-ID and storage-object filenames before saving the movie.
-- Uses the server Content-Disposition filename only when it is a meaningful name.
-- Shows Pause and Cancel while downloading, then Resume and Cancel while paused.
-- Continues a paused download with HTTP Range requests instead of restarting from zero when the storage server supports ranges.
-- Cancelling removes the incomplete file.
-- Saves completed movies in `Downloads/MK Movies`.
-- Used the earlier `mk_movie_downloads_v4` notification channel for the first resumable-download release.
-- Targets Android 16 / API 36 and releases as versionName 2.10.1, versionCode 22.

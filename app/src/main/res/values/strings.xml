@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">MK Movies</string>
-    <string name="provider_authority">ng.com.mkmovies.app.fileprovider</string>
-    <string name="asset_statements">[{\"relation\":[\"delegate_permission/common.handle_all_urls\"],\"target\":{\"namespace\":\"web\",\"site\":\"https://mkmovies.com.ng\"}}]</string>
+    <string name="app_name">Alpha Movies</string>
+    <string name="splash_loading">Loading your movies...</string>
+    <string name="offline_title">No internet connection</string>
+    <string name="offline_message">Please check your connection and try again.</string>
+    <string name="retry">Retry</string>
 </resources>

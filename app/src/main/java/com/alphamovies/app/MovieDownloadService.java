@@ -345,7 +345,7 @@ public class MovieDownloadService extends Service {
         if (manager == null) return;
         Notification.Builder builder = notificationBuilder()
                 .setSmallIcon(R.drawable.ic_stat_alpha)
-                .setContentTitle(filename)
+                .setContentTitle(notificationMovieTitle(filename))
                 .setContentText("Download complete • Tap to open Downloads")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(false)
@@ -371,7 +371,7 @@ public class MovieDownloadService extends Service {
         Notification.Builder builder = notificationBuilder()
                 .setSmallIcon(R.drawable.ic_stat_alpha)
                 .setColor(Color.rgb(220, 38, 38))
-                .setContentTitle(filename == null || filename.isEmpty() ? "Alpha Movies download" : filename)
+                .setContentTitle(notificationMovieTitle(filename))
                 .setContentText(status)
                 .setStyle(new Notification.BigTextStyle().bigText(status))
                 .setOngoing(true)
@@ -386,6 +386,25 @@ public class MovieDownloadService extends Service {
             builder.setPriority(Notification.PRIORITY_HIGH);
         }
         return builder.build();
+    }
+
+    private static String notificationMovieTitle(String rawFilename) {
+        if (rawFilename == null || rawFilename.trim().isEmpty()) return "Alpha Movies download";
+
+        String title = rawFilename.trim();
+        title = title.replaceFirst("(?i)\\.(mp4|mkv|webm|m4v|mov|avi|3gp)$", "");
+
+        // R2/object filenames can contain a numeric prefix, timestamp, random
+        // object key and trailing ID. Hide those storage details and show only
+        // the actual movie title in Android's notification.
+        boolean generatedPrefix = title.matches("^\\d{3,}[-_]\\d{6,}[-_][A-Za-z0-9]{5,}[-_].+");
+        if (generatedPrefix) {
+            title = title.replaceFirst("^\\d{3,}[-_]\\d{6,}[-_][A-Za-z0-9]{5,}[-_]+", "");
+            title = title.replaceFirst("[-_]\\d{3,}$", "");
+        }
+
+        title = title.replace('_', ' ').replace('-', ' ').replaceAll("\\s+", " ").trim();
+        return title.isEmpty() ? "Alpha Movies download" : title;
     }
 
     private Notification.Builder notificationBuilder() {
