@@ -1,5 +1,13 @@
 # Alpha Movies Android WebView App
 
+## Alpha Movies Android v1.0.10
+
+- Adds AndroidX `SwipeRefreshLayout` to the app compile classpath.
+- Excludes obsolete `ng.com.mkmovies.app` Java files if an older MK Movies source folder remains in the GitHub repository.
+- Keeps the correct Alpha Movies namespace, application ID and Java package as `com.alphamovies.app`.
+- Keeps BuildConfig generation enabled.
+- Fixes the `:app:compileDebugJavaWithJavac` failure without renaming Alpha Movies to MK Movies.
+
 ## Alpha Movies Android v1.0.9
 
 - Defines the missing `@color/backgroundColor` resource required by merged Android 12+ (`values-v31`) splash resources.
@@ -18,7 +26,7 @@ This is the Android WebView project for Alpha Movies.
 
 - App name: Alpha Movies
 - Package/Application ID: `com.alphamovies.app`
-- Version: `1.0.9` / `versionCode 10`
+- Version: `1.0.10` / `versionCode 11`
 - Main activity: `com.alphamovies.app.MainActivity`
 - Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 
