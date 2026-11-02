@@ -76,6 +76,14 @@ app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 Then rebuild the APK.
 # Alpha Movies Android v1.0.7
 
+## GitHub Actions Android SDK fix
+
+- Updated `android-actions/setup-android` from v3 to v4.
+- Explicitly installs `platform-tools` instead of the removed legacy `tools` package.
+- Installs `platforms;android-36` and `build-tools;36.0.0` with `sdkmanager --install`.
+- Applies the same Android 36 setup to debug APK and signed Play Store builds.
+- Pins Gradle 8.10.2 and disables the Gradle daemon in both workflows for consistent CI builds.
+
 ## Proper Android movie downloads
 
 - Uses a foreground Android download service instead of a silent browser-style transfer.
