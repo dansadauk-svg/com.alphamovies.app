@@ -2,7 +2,6 @@ package com.alphamovies.app;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.Manifest;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -427,12 +425,14 @@ public class MainActivity extends Activity {
 
     private class AlphaDownloadBridge {
         @JavascriptInterface
-        public void startMovieDownload(final String url) {
+        public void startMovieDownload(final String url, final String movieTitle) {
             if (url == null || url.trim().isEmpty()) return;
             runOnUiThread(() -> startDownload(
                     url,
                     webView != null ? webView.getSettings().getUserAgentString() : "AlphaMoviesAndroid/" + BuildConfig.VERSION_NAME,
-                    "attachment",
+                    movieTitle == null || movieTitle.trim().isEmpty()
+                            ? "attachment"
+                            : "attachment; filename=\"" + movieTitle.trim().replace("\"", "") + "\"",
                     guessMimeTypeFromUrl(url)
             ));
         }
@@ -461,7 +461,10 @@ public class MainActivity extends Activity {
                 + "var a=e.target&&e.target.closest?e.target.closest('a'):null;"
                 + "if(!isDownloadLink(a))return;"
                 + "e.preventDefault();e.stopPropagation();"
-                + "try{window.AlphaMoviesAndroidBridge.startMovieDownload(a.href);}catch(err){window.location.href=a.href;}"
+                + "var title=a.getAttribute('download')||a.getAttribute('data-movie-title')||a.getAttribute('data-title')||'';"
+                + "if(!title){var h=document.querySelector('h1.entry-title,h1.movie-title,.movie-title,h1');if(h)title=(h.textContent||'').trim();}"
+                + "if(!title)title=(document.title||'Alpha Movies').replace(/\\s*[|\\-–—]\\s*Alpha Movies.*$/i,'').trim();"
+                + "try{window.AlphaMoviesAndroidBridge.startMovieDownload(a.href,title);}catch(err){window.location.href=a.href;}"
                 + "},true);"
                 + "})();";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -588,40 +591,29 @@ public class MainActivity extends Activity {
             if (safeMimeType == null || safeMimeType.trim().isEmpty()) safeMimeType = "application/octet-stream";
 
             String filename = cleanDownloadFilename(url, contentDisposition, safeMimeType);
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setMimeType(safeMimeType);
-            request.addRequestHeader("User-Agent", userAgent != null ? userAgent : ("AlphaMoviesAndroid/" + BuildConfig.VERSION_NAME));
-            request.addRequestHeader("Accept", "video/*,application/octet-stream,*/*");
-
             String cookies = CookieManager.getInstance().getCookie(url);
             if (cookies == null) {
                 cookies = CookieManager.getInstance().getCookie(AppConfig.WEBSITE_URL);
             }
             if (cookies != null && !cookies.trim().isEmpty()) {
-                request.addRequestHeader("Cookie", cookies);
+                // Passed to the foreground service so protected subscriber links
+                // continue to work outside the WebView process.
             }
 
-            request.setTitle(filename);
-            request.setDescription("Downloading movie from Alpha Movies");
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-            request.setAllowedOverMetered(true);
-            request.setAllowedOverRoaming(true);
-            request.allowScanningByMediaScanner();
-
-            try {
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-            } catch (Exception e) {
-                request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, filename);
-            }
-
-            DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-            if (manager != null) {
-                manager.enqueue(request);
-                Toast.makeText(this, "Download started. Check your Downloads.", Toast.LENGTH_LONG).show();
+            Intent serviceIntent = MovieDownloadService.newDownloadIntent(
+                    this,
+                    url,
+                    filename,
+                    safeMimeType,
+                    userAgent != null ? userAgent : ("AlphaMoviesAndroid/" + BuildConfig.VERSION_NAME),
+                    cookies == null ? "" : cookies
+            );
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
             } else {
-                Toast.makeText(this, "Download manager is not available", Toast.LENGTH_SHORT).show();
+                startService(serviceIntent);
             }
+            Toast.makeText(this, "Downloading “" + filename + "”", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.w(TAG, "Movie download failed", e);
             Toast.makeText(this, "Download failed. Please try again.", Toast.LENGTH_LONG).show();

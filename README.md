@@ -74,3 +74,15 @@ app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 ```
 
 Then rebuild the APK.
+# Alpha Movies Android v1.0.7
+
+## Proper Android movie downloads
+
+- Uses a foreground Android download service instead of a silent browser-style transfer.
+- Shows the movie title, progress and downloaded size in the notification.
+- Includes Pause/Resume and Cancel actions in the notification bar.
+- Uses HTTP Range requests to continue a paused transfer without starting again when the server supports resume.
+- Saves completed movies under Downloads/Alpha Movies.
+- Uses an audible, vibrating Android notification channel for download start and completion.
+- Passes the movie page title into Android so downloaded files keep a readable movie name.
+
