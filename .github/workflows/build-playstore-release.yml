@@ -19,8 +19,21 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: 'false'
+
+      - name: Install Android 36 platform and build tools
+        run: |
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
+          sdkmanager --list_installed
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.10.2
 
       - name: Decode release keystore
         run: |
@@ -32,7 +45,7 @@ jobs:
           RELEASE_STORE_PASSWORD: ${{ secrets.ALPHA_MOVIES_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.ALPHA_MOVIES_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.ALPHA_MOVIES_KEY_PASSWORD }}
-        run: gradle bundleRelease
+        run: gradle bundleRelease --no-daemon
 
       - name: Build signed release APK
         env:
@@ -40,7 +53,7 @@ jobs:
           RELEASE_STORE_PASSWORD: ${{ secrets.ALPHA_MOVIES_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.ALPHA_MOVIES_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.ALPHA_MOVIES_KEY_PASSWORD }}
-        run: gradle assembleRelease
+        run: gradle assembleRelease --no-daemon
 
       - name: Upload Play Store AAB
         uses: actions/upload-artifact@v4
@@ -53,4 +66,3 @@ jobs:
         with:
           name: alpha-movies-signed-release-apk
           path: app/build/outputs/apk/release/*.apk
- X
