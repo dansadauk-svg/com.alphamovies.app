@@ -1,5 +1,12 @@
 # Alpha Movies Android WebView App
 
+## Alpha Movies Android v1.0.12
+
+- Saves downloaded videos using only the clean movie title.
+- Removes R2 numeric prefixes, timestamps, random object keys, trailing IDs and separators from the actual saved filename.
+- Example: `1049-1793557352-jnaibpjs-KUNNA-WUTA_6925.mp4` is saved as `KUNNA WUTA.mp4`.
+- Prioritizes the movie page title over the raw HTML `download` filename.
+
 ## Alpha Movies Android v1.0.11
 
 - Raises the minimum supported Android SDK from 23 to 24.
@@ -32,7 +39,7 @@ This is the Android WebView project for Alpha Movies.
 
 - App name: Alpha Movies
 - Package/Application ID: `com.alphamovies.app`
-- Version: `1.0.11` / `versionCode 12`
+- Version: `1.0.12` / `versionCode 13`
 - Main activity: `com.alphamovies.app.MainActivity`
 - Website URL location: `app/src/main/java/com/alphamovies/app/AppConfig.java`
 

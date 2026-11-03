@@ -118,7 +118,7 @@ public class MovieDownloadService extends Service {
             return;
         }
         downloadUrl = safe(intent.getStringExtra(EXTRA_URL));
-        filename = safeFilename(intent.getStringExtra(EXTRA_FILENAME));
+        filename = cleanMovieFilename(intent.getStringExtra(EXTRA_FILENAME));
         mimeType = safe(intent.getStringExtra(EXTRA_MIME));
         userAgent = safe(intent.getStringExtra(EXTRA_USER_AGENT));
         cookies = safe(intent.getStringExtra(EXTRA_COOKIES));
@@ -469,11 +469,36 @@ public class MovieDownloadService extends Service {
         return value == null ? "" : value.trim();
     }
 
-    private static String safeFilename(String value) {
+    public static String cleanMovieFilename(String value) {
         String result = safe(value).replaceAll("[\\\\/:*?\"<>|]", "-");
-        if (result.isEmpty()) result = "Alpha-Movies-" + System.currentTimeMillis() + ".mp4";
-        if (!result.contains(".")) result += ".mp4";
-        return result;
+        if (result.isEmpty()) return "Alpha Movies " + System.currentTimeMillis() + ".mp4";
+
+        String extension = ".mp4";
+        java.util.regex.Matcher extensionMatcher = java.util.regex.Pattern
+                .compile("(?i)\\.(mp4|mkv|webm|m4v|mov|avi|3gp)$")
+                .matcher(result);
+        if (extensionMatcher.find()) {
+            extension = extensionMatcher.group().toLowerCase(Locale.US);
+            result = result.substring(0, extensionMatcher.start());
+        }
+
+        // Example R2 name:
+        // 1049-1793557352-jnaibpjs-KUNNA-WUTA_6925.mp4
+        // Saved result: KUNNA WUTA.mp4
+        boolean generatedPrefix = result.matches("^\\d{2,}[-_]\\d{8,}[-_][A-Za-z0-9]{3,20}[-_].+");
+        if (generatedPrefix) {
+            result = result.replaceFirst("^\\d{2,}[-_]\\d{8,}[-_][A-Za-z0-9]{3,20}[-_]+", "");
+            result = result.replaceFirst("[-_]\\d{3,}$", "");
+        }
+
+        result = result.replace('_', ' ')
+                .replace('-', ' ')
+                .replaceAll("\\s+", " ")
+                .trim();
+
+        if (result.isEmpty()) result = "Alpha Movies " + System.currentTimeMillis();
+        if (result.length() > 120) result = result.substring(0, 120).trim();
+        return result + extension;
     }
 
     private static File uniqueFile(File directory, String name) {

@@ -461,9 +461,10 @@ public class MainActivity extends Activity {
                 + "var a=e.target&&e.target.closest?e.target.closest('a'):null;"
                 + "if(!isDownloadLink(a))return;"
                 + "e.preventDefault();e.stopPropagation();"
-                + "var title=a.getAttribute('download')||a.getAttribute('data-movie-title')||a.getAttribute('data-title')||'';"
+                + "var title=a.getAttribute('data-movie-title')||a.getAttribute('data-title')||'';"
                 + "if(!title){var h=document.querySelector('h1.entry-title,h1.movie-title,.movie-title,h1');if(h)title=(h.textContent||'').trim();}"
                 + "if(!title)title=(document.title||'Alpha Movies').replace(/\\s*[|\\-–—]\\s*Alpha Movies.*$/i,'').trim();"
+                + "if(!title)title=a.getAttribute('download')||'';"
                 + "try{window.AlphaMoviesAndroidBridge.startMovieDownload(a.href,title);}catch(err){window.location.href=a.href;}"
                 + "},true);"
                 + "})();";
@@ -575,9 +576,7 @@ public class MainActivity extends Activity {
             filename = "Alpha-Movies-" + System.currentTimeMillis() + ext;
         }
 
-        filename = filename.replaceAll("[\\\\/:*?\"<>|]", "-");
-        if (!filename.contains(".")) filename = filename + ".mp4";
-        return filename;
+        return MovieDownloadService.cleanMovieFilename(filename);
     }
 
     private void startDownload(String url, String userAgent, String contentDisposition, String mimeType) {
