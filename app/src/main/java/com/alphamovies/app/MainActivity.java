@@ -184,7 +184,7 @@ public class MainActivity extends Activity {
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-                startDownload(url, userAgent, contentDisposition, mimeType);
+                startDownloadWithPageTitle(url, userAgent, contentDisposition, mimeType);
             }
         });
     }
@@ -430,10 +430,9 @@ public class MainActivity extends Activity {
             runOnUiThread(() -> startDownload(
                     url,
                     webView != null ? webView.getSettings().getUserAgentString() : "AlphaMoviesAndroid/" + BuildConfig.VERSION_NAME,
-                    movieTitle == null || movieTitle.trim().isEmpty()
-                            ? "attachment"
-                            : "attachment; filename=\"" + movieTitle.trim().replace("\"", "") + "\"",
-                    guessMimeTypeFromUrl(url)
+                    "attachment",
+                    guessMimeTypeFromUrl(url),
+                    movieTitle
             ));
         }
     }
@@ -460,11 +459,11 @@ public class MainActivity extends Activity {
                 + "document.addEventListener('click',function(e){"
                 + "var a=e.target&&e.target.closest?e.target.closest('a'):null;"
                 + "if(!isDownloadLink(a))return;"
+                + "var access=a.getAttribute('data-download-access');"
+                + "if(access==='login-required'||access==='subscription-required')return;"
                 + "e.preventDefault();e.stopPropagation();"
                 + "var title=a.getAttribute('data-movie-title')||a.getAttribute('data-title')||'';"
-                + "if(!title){var h=document.querySelector('h1.entry-title,h1.movie-title,.movie-title,h1');if(h)title=(h.textContent||'').trim();}"
-                + "if(!title)title=(document.title||'Alpha Movies').replace(/\\s*[|\\-–—]\\s*Alpha Movies.*$/i,'').trim();"
-                + "if(!title)title=a.getAttribute('download')||'';"
+                + "if(!title)title=" + movieTitleJavascript() + ";"
                 + "try{window.AlphaMoviesAndroidBridge.startMovieDownload(a.href,title);}catch(err){window.location.href=a.href;}"
                 + "},true);"
                 + "})();";
@@ -516,7 +515,7 @@ public class MainActivity extends Activity {
 
         if ("http".equals(scheme) || "https".equals(scheme)) {
             if (isMovieDownloadUrl(uri) || isLikelyMovieFileUrl(uri)) {
-                startDownload(
+                startDownloadWithPageTitle(
                         uri.toString(),
                         webView != null ? webView.getSettings().getUserAgentString() : "AlphaMoviesAndroid/" + BuildConfig.VERSION_NAME,
                         "attachment",
@@ -579,7 +578,41 @@ public class MainActivity extends Activity {
         return MovieDownloadService.cleanMovieFilename(filename);
     }
 
-    private void startDownload(String url, String userAgent, String contentDisposition, String mimeType) {
+    private String movieTitleJavascript() {
+        return "(function(){"
+                + "var selectors=['.mk-watch-white__title','.mkmc-watch-title','.mkmas-single .mk-single__title','h1.movie-title','h1.entry-title','h1'];"
+                + "for(var i=0;i<selectors.length;i++){var h=document.querySelector(selectors[i]);"
+                + "if(h&&h.textContent.trim())return h.textContent.trim();}"
+                + "return (document.title||'').replace(/\\s*[|\\-–—]\\s*Alpha Movies.*$/i,'').trim();"
+                + "})()";
+    }
+
+    private void startDownloadWithPageTitle(String url, String userAgent, String contentDisposition, String mimeType) {
+        if (webView == null) {
+            startDownload(url, userAgent, contentDisposition, mimeType, "");
+            return;
+        }
+        webView.evaluateJavascript(movieTitleJavascript(), value -> {
+            String title = "";
+            try {
+                Object decoded = new org.json.JSONTokener(value == null ? "null" : value).nextValue();
+                if (decoded instanceof String) title = (String) decoded;
+            } catch (org.json.JSONException ignored) {}
+            startDownload(url, userAgent, contentDisposition, mimeType, title);
+        });
+    }
+
+    private String withMovieTitle(String filename, String movieTitle) {
+        String title = movieTitle == null ? "" : movieTitle.trim();
+        if (title.isEmpty() || title.equalsIgnoreCase("Alpha Movies")
+                || title.equalsIgnoreCase("Download Movie") || title.equalsIgnoreCase("Login Required")) return filename;
+        int dot = filename.lastIndexOf('.');
+        String extension = dot >= 0 ? filename.substring(dot) : ".mp4";
+        title = title.replaceFirst("(?i)\\.(mp4|mkv|webm|m4v|mov|avi|3gp)$", "");
+        return MovieDownloadService.cleanMovieFilename(title + extension);
+    }
+
+    private void startDownload(String url, String userAgent, String contentDisposition, String mimeType, String movieTitle) {
         try {
             if (url == null || url.trim().isEmpty()) {
                 Toast.makeText(this, "Download link is empty", Toast.LENGTH_SHORT).show();
@@ -589,7 +622,7 @@ public class MainActivity extends Activity {
             String safeMimeType = (mimeType == null || mimeType.trim().isEmpty()) ? guessMimeTypeFromUrl(url) : mimeType;
             if (safeMimeType == null || safeMimeType.trim().isEmpty()) safeMimeType = "application/octet-stream";
 
-            String filename = cleanDownloadFilename(url, contentDisposition, safeMimeType);
+            String filename = withMovieTitle(cleanDownloadFilename(url, contentDisposition, safeMimeType), movieTitle);
             String cookies = CookieManager.getInstance().getCookie(url);
             if (cookies == null) {
                 cookies = CookieManager.getInstance().getCookie(AppConfig.WEBSITE_URL);
