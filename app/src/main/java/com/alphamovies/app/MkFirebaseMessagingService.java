@@ -39,7 +39,7 @@ public class MkFirebaseMessagingService extends FirebaseMessagingService {
 
         String title = value(data, "title", "Alpha Movies");
         String body = value(data, "body", "New update available");
-        String url = firstValue(data, "url", "open_url", "link", "click_url");
+        String url = firstValue(data, "url", "open_url", "click_url", "deeplink", "link");
         String imageUrl = firstValue(data,
                 "image", "image_url", "imageUrl", "poster", "poster_url",
                 "movie_poster", "movie_poster_url", "big_picture", "bigPicture",

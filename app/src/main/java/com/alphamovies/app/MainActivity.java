@@ -293,14 +293,20 @@ public class MainActivity extends Activity {
 
     private String getLaunchUrl(Intent intent) {
         if (intent == null) return null;
-        String url = intent.getStringExtra("url");
-        if (!isHttpUrl(url)) {
-            url = intent.getStringExtra("open_url");
+        for (String key : new String[]{"url", "open_url", "click_url", "deeplink", "link"}) {
+            String url = intent.getStringExtra(key);
+            if (isMovieSiteUrl(url)) return url.trim();
         }
-        if (!isHttpUrl(url) && Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getData() != null) {
-            url = intent.getData().toString();
-        }
-        return isHttpUrl(url) ? url.trim() : null;
+        String url = intent.getDataString();
+        return isMovieSiteUrl(url) ? url.trim() : null;
+    }
+
+    private boolean isMovieSiteUrl(String url) {
+        if (!isHttpUrl(url)) return false;
+        String host = Uri.parse(url.trim()).getHost();
+        String siteHost = Uri.parse(AppConfig.WEBSITE_URL).getHost();
+        return siteHost != null && (siteHost.equalsIgnoreCase(host)
+                || ("www." + siteHost).equalsIgnoreCase(host));
     }
 
     private boolean isHttpUrl(String url) {
